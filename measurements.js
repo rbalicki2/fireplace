@@ -9,9 +9,6 @@ const BASE_CUTOUT_DEPTH = units.inch.setValue(0.5);
 const BASE_TOTAL_DEPTH = units.inch.setValue(26);
 const BASE_ACTUAL_DEPTH = BASE_TOTAL_DEPTH.subtract(BASE_CUTOUT_DEPTH);
 
-console.log(BASE_WIDTH.toString());
-console.log(new Equation(BASE_WIDTH).toString());
-
 export default {
   FUNDAMENTALS: {
     topw: new Equation(units.topw),

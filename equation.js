@@ -8,6 +8,10 @@ const assertIsUnit = assertIs('Unit');
 const assertIsEquation = assertIs('Equation');
 
 export default class Equation {
+  static fromEquations(...equations) {
+    return (new Equation()).add(...equations);
+  }
+
   // takes unit arguments
   constructor(...args) {
     this.units = {};

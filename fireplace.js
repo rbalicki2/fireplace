@@ -4,23 +4,25 @@ import Equation from './Equation';
 
 // base frame works correctly
 
-const BASE_OUTER_CALCULATED_WIDTH = (new Equation()).add(
-  measurements.FUNDAMENTALS.topw,
-  measurements.FUNDAMENTALS.topw,
-  measurements.BASE.FRAME.longSide,
-  measurements.FUNDAMENTALS.totbt,
-  measurements.FUNDAMENTALS.totbt
+const {
+  FUNDAMENTALS,
+  BASE
+} = measurements;
+
+const BASE_WIDTH_AT_FRAME = Equation.fromEquations(
+  FUNDAMENTALS.topw,
+  FUNDAMENTALS.topw,
+  BASE.FRAME.longSide,
+  FUNDAMENTALS.totbt,
+  FUNDAMENTALS.totbt
 );
+assert(BASE.OUTER.WIDTH.isEqual(BASE_WIDTH_AT_FRAME), 'Outer width does not match up');
 
-
-console.log(BASE_OUTER_CALCULATED_WIDTH.toString());
-console.log('------');
-console.log(measurements.BASE.OUTER.WIDTH.toString());
-
-assert(
-  measurements.BASE.OUTER.WIDTH.isEqual(
-    BASE_OUTER_CALCULATED_WIDTH
-  ),
-  'Outer width does not match up'
+const BASE_DEPTH_AT_FRAME = Equation.fromEquations(
+  FUNDAMENTALS.topw,
+  FUNDAMENTALS.totbt, // support or long bar
+  FUNDAMENTALS.totbt,
+  BASE.FRAME.shortSide
 );
+assert(BASE.OUTER.ACTUAL_DEPTH.isEqual(BASE_DEPTH_AT_FRAME), 'Actual depth does not match up');
 
