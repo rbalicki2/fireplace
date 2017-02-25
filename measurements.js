@@ -95,26 +95,40 @@ export default {
       SIDE_WIDTH: MIDSECTION_SIDE_WIDTH,
     },
     FRAME: {
-      support: new Equation(MIDSECTION_HEIGHT),
+      CORNER_SUPPORT: MIDSECTION_HEIGHT, // 4
+      // 2 of these
+      INNER_FRONT_SUPPORT: new Equation(
+        MIDSECTION_HEIGHT,
+        totbt.multiply(-1),
+      ),
+      // 2 of these
+      INNER_BACK_SUPPORT: new Equation(
+        MIDSECTION_HEIGHT,
+        totbt.multiply(-2)
+      ),
+      // 3 of these
       FULL_WIDTH: new Equation(
         MIDSECTION_WIDTH,
         totbt.multiply(-2),
         topw.multiply(-2)
-      ), // 3 of these
+      ),
+      // 2 of these:
       CUTOUT_WIDTH: new Equation(
         MIDSECTION_CUTOUT_WIDTH,
         topw.multiply(2)
       ),
+      // 8:
       SIDE_WIDTH: new Equation(
         MIDSECTION_SIDE_WIDTH,
         totbt.multiply(-2),
         topw.multiply(-2)
       ),
+      // 12 of these
       DEPTH: new Equation(
         MIDSECTION_DEPTH,
         topw.multiply(-1),
         totbt.multiply(-2)
-      )
+      ),
     },
     PANELS: {
       OUTER_SIDE: {
@@ -129,11 +143,44 @@ export default {
           MIDSECTION_CUTOUT_DEPTH,
           topw.multiply(-1) // back wall is not included in cutout depth
         ),
-        // height: new Equation(MIDSECTION_HEIGHT),
+        height: MIDSECTION_CUTOUT_HEIGHT,
       },
+      // goes on top of back and side panels, so its dimensions are larger than the cutout outer dims
       CUTOUT_TOP: {
-
-      }
-    }
-  }
-}
+        width: new Equation(
+          MIDSECTION_CUTOUT_WIDTH,
+          topw.multiply(2)
+        ),
+        depth: new Equation(
+          MIDSECTION_CUTOUT_DEPTH,
+          topw
+        ),
+      },
+      CUTOUT_BACK: {
+        width: new Equation(
+          MIDSECTION_CUTOUT_WIDTH,
+          topw.multiply(2)
+        ),
+        height: MIDSECTION_CUTOUT_HEIGHT,
+      },
+      FRONT: {
+        width: MIDSECTION_WIDTH,
+        height: MIDSECTION_HEIGHT,
+        cutoutWidth: MIDSECTION_CUTOUT_WIDTH,
+        cutoutHeight: MIDSECTION_CUTOUT_HEIGHT,
+      },
+    },
+  },
+  TOP: {
+    PANEL: {
+      width: TOP_WIDTH,
+      depth: TOP_DEPTH,
+    },
+    MOULDING_SIDE: {
+      length: TOP_DEPTH
+    },
+    MOULDING_FRONT: {
+      length: TOP_WIDTH,
+    },
+  },
+};
