@@ -3,9 +3,10 @@ import Unit from './unit';
 import forEach from 'lodash/forEach';
 import every from 'lodash/every';
 
-const assertIs = type => arg => assert(arg.constructor.name === type);
+const assertIs = type => arg => assert.equal(arg.constructor.name, type);
 const assertIsUnit = assertIs('Unit');
 const assertIsEquation = assertIs('Equation');
+const assertIsUnitOrEquation = arg => assert(arg.constructor.name === 'Unit' || arg.constructor.name === 'Equation');
 
 export default class Equation {
   static fromEquations(...equations) {
@@ -16,8 +17,12 @@ export default class Equation {
   constructor(...args) {
     this.units = {};
     args.forEach(arg => {
-      assertIsUnit(arg);
-      this.addOrSet(arg);
+      assertIsUnitOrEquation(arg);
+      if (arg.constructor.name === 'Unit') {
+        this.addOrSet(arg);
+      } else {
+        arg.iterableUnits.forEach(unit => this.addOrSet(unit));
+      }
     });
   }
 
@@ -66,20 +71,32 @@ export default class Equation {
   }
 
   clone() {
-    return new Equation(...Object.values(this.units));
+    return new Equation(...this.iterableUnits);
   }
 
   add(...otherEquations) {
-    otherEquations.forEach(eqn => {
-      assertIsEquation(eqn);
+    const actualEquations = otherEquations.map(otherEqn => {
+      assertIsUnitOrEquation(otherEqn);
+
+      if (otherEqn.constructor.name === 'Unit') {
+        return new Equation(otherEqn);
+      }
+
+      return otherEqn;
     });
 
     const eqn = this.clone();
 
-    otherEquations.forEach(otherEquation => {
-      forEach(otherEquation.iterableUnits, unit => eqn.addOrSet(unit))
+    actualEquations.forEach(actualEqn => {
+      forEach(actualEqn.iterableUnits, unit => eqn.addOrSet(unit))
     });
 
     return eqn;
+  }
+
+  multiply(scalar) {
+    return new Equation(
+      ...this.iterableUnits.map(unit => unit.multiply(scalar))
+    );
   }
 }

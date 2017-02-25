@@ -10,7 +10,8 @@ const {
     topw,
     totbt
   },
-  BASE
+  BASE,
+  MIDSECTION
 } = measurements;
 
 // BASE FRAME
@@ -45,3 +46,59 @@ assert(BASE.OUTER.TOP_DEPTH.isEqual(BASE_DEPTH_AT_PANEL_TOP), 'Side base panel p
 
 // BASE TOP doesn't need testing...
 
+// MIDSECTION
+// OUTER WIDTH
+assert(MIDSECTION.OUTER.WIDTH.isEqual(
+  new Equation(
+    MIDSECTION.OUTER.CUTOUT_WIDTH,
+    MIDSECTION.OUTER.SIDE_WIDTH,
+    MIDSECTION.OUTER.SIDE_WIDTH
+  )
+), 'midsection outer widths');
+
+assert(MIDSECTION.OUTER.WIDTH.isEqual(
+  new Equation(
+    MIDSECTION.FRAME.FULL_WIDTH,
+    totbt.multiply(2),
+    topw.multiply(2)
+  )
+), 'full width adds up');
+
+// SIDE WIDTH
+assert(MIDSECTION.OUTER.SIDE_WIDTH.isEqual(
+  new Equation(
+    MIDSECTION.FRAME.SIDE_WIDTH,
+    totbt.multiply(2),
+    topw.multiply(2)
+  )
+), 'side width at frame');
+
+// inner cutout width is 2*topw larger than the visible width
+assert(MIDSECTION.OUTER.CUTOUT_WIDTH.isEqual(new Equation(
+  MIDSECTION.FRAME.CUTOUT_WIDTH,
+  topw.multiply(-2)
+)), 'cutout width at frame');
+
+assert(MIDSECTION.OUTER.DEPTH.isEqual(new Equation(
+  MIDSECTION.FRAME.DEPTH,
+  topw,
+  totbt.multiply(2)
+)), 'depth at frame');
+
+assert(MIDSECTION.OUTER.DEPTH.isEqual(new Equation(
+  MIDSECTION.PANELS.OUTER_SIDE.width,
+  topw
+)), 'depth at outer panel');
+
+assert(MIDSECTION.OUTER.CUTOUT_DEPTH.isEqual(new Equation(
+  MIDSECTION.PANELS.CUTOUT_SIDE.width,
+  topw
+)), 'depth of cutout at panel');
+
+assert(MIDSECTION.OUTER.DEPTH.isEqual(new Equation(
+  MIDSECTION.PANELS.CUTOUT_SIDE.width,
+  topw.multiply(2),
+  totbt
+)), 'depth at inner cutout panel');
+
+// height
