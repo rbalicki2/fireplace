@@ -98,15 +98,19 @@ export default class Equation {
     return new Equation(
       ...this.iterableUnits.map(unit => unit.multiply(scalar))
     );
-  },
+  }
 
-  // replace(fromUnit, toUnit) {
-  //   const eqn = this.clone();
-  //   const conversionRatio = toUnit.value / fromUnit.value;
-  //   const replacementUnit = eqn[toUnit.type] || new Unit(toUnit.type, 0);
+  replace(fromUnit, toUnit) {
+    const eqn = this.clone();
+    const conversionRatio = toUnit.value / fromUnit.value;
+    const actualFromUnit = eqn.units[fromUnit.type] || new Unit(fromUnit.type, 0);
+    const convertedUnit = actualFromUnit.multiply(conversionRatio);
+    convertedUnit.type = toUnit.type;
 
-  //   eqn[toUnit.type] = replacementUnit.setValue(
-  //     to
-  //   );
-  // }
+    eqn.addOrSet(convertedUnit);
+
+    delete eqn.units[fromUnit.type];
+
+    return eqn;
+  }
 }

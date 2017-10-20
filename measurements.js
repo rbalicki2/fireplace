@@ -8,10 +8,9 @@ const { topw, totbt, inch, mouldingWidth } = units;
 const BASE_WIDTH = inch.setValue(58);
 const BASE_HEIGHT = inch.setValue(6);
 const BASE_CUTOUT_DEPTH = inch.setValue(0.5);
-const BASE_TOP_DEPTH = inch.setValue(26);
+const BASE_TOP_DEPTH = inch.setValue(20);
 const BASE_BOTTOM_DEPTH = BASE_TOP_DEPTH.subtract(BASE_CUTOUT_DEPTH);
-
-// ignoring base top... :)
+const BASE_TOP_EXTRA = inch.setValue(2);
 
 const TOP_DEPTH = inch.setValue(8);
 const TOP_WIDTH = inch.setValue(52);
@@ -41,10 +40,10 @@ const MIDSECTION_SIDE_WIDTH = new Equation(
 
 export default {
   FUNDAMENTALS: {
-    topw: new Equation(topw),
-    totbt: new Equation(totbt),
-    inch: new Equation(inch),
-    mouldingWidth: new Equation(mouldingWidth),
+    topw,
+    totbt,
+    inch,
+    mouldingWidth,
   },
   BASE: {
     OUTER: {
@@ -82,6 +81,21 @@ export default {
         ),
         height: new Equation(BASE_HEIGHT),
       },
+      INNER: {
+        width: new Equation(
+          BASE_BOTTOM_DEPTH,
+          topw.multiply(-1),
+          totbt.multiply(-2)
+        ),
+        height: new Equation(BASE_HEIGHT),
+      },
+      TOP_OF_BASE: {
+        depth: new Equation(BASE_TOP_DEPTH, BASE_TOP_EXTRA),
+        width: new Equation(
+          BASE_WIDTH,
+          BASE_TOP_EXTRA.multiply(2)
+        ),
+      },
     },
   },
   MIDSECTION: {
@@ -95,7 +109,7 @@ export default {
       SIDE_WIDTH: MIDSECTION_SIDE_WIDTH,
     },
     FRAME: {
-      CORNER_SUPPORT: MIDSECTION_HEIGHT, // 4
+      CORNER_SUPPORT: new Equation(MIDSECTION_HEIGHT), // 4
       // 2 of these
       INNER_FRONT_SUPPORT: new Equation(
         MIDSECTION_HEIGHT,
@@ -131,6 +145,12 @@ export default {
       ),
     },
     PANELS: {
+      FRONT: {
+        width: MIDSECTION_WIDTH,
+        height: new Equation(MIDSECTION_HEIGHT),
+        cutoutWidth: new Equation(MIDSECTION_CUTOUT_WIDTH),
+        cutoutHeight: new Equation(MIDSECTION_CUTOUT_HEIGHT),
+      },
       OUTER_SIDE: {
         width: new Equation(
           MIDSECTION_DEPTH,
@@ -143,7 +163,7 @@ export default {
           MIDSECTION_CUTOUT_DEPTH,
           topw.multiply(-1) // back wall is not included in cutout depth
         ),
-        height: MIDSECTION_CUTOUT_HEIGHT,
+        height: new Equation(MIDSECTION_CUTOUT_HEIGHT),
       },
       // goes on top of back and side panels, so its dimensions are larger than the cutout outer dims
       CUTOUT_TOP: {
@@ -161,20 +181,14 @@ export default {
           MIDSECTION_CUTOUT_WIDTH,
           topw.multiply(2)
         ),
-        height: MIDSECTION_CUTOUT_HEIGHT,
-      },
-      FRONT: {
-        width: MIDSECTION_WIDTH,
-        height: MIDSECTION_HEIGHT,
-        cutoutWidth: MIDSECTION_CUTOUT_WIDTH,
-        cutoutHeight: MIDSECTION_CUTOUT_HEIGHT,
+        height: new Equation(MIDSECTION_CUTOUT_HEIGHT),
       },
     },
   },
   TOP: {
     PANEL: {
-      width: TOP_WIDTH,
-      depth: TOP_DEPTH,
+      width: new Equation(TOP_WIDTH),
+      depth: new Equation(TOP_DEPTH),
     },
     MOULDING_SIDE: {
       length: TOP_DEPTH

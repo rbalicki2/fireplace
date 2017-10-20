@@ -8,7 +8,8 @@
   "dependencies": {
     "assert": "^1.4.1",
     "lodash": "^4.17.4",
-    "symbol-description": "^1.0.0"
+    "symbol-description": "^1.0.0",
+    "yargs": "^6.6.0"
   },
   "devDependencies": {
     "babel-core": "^6.21.0",
